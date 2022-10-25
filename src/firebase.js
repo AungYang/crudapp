@@ -13,7 +13,8 @@ const firebaseConfig = {
 };
 
 
-const app = initializeApp(firebaseConfig); //initialize the connection between fb and our project
+const app = initializeApp(firebaseConfig); //initialize the connection between firebase and our project
 
-export const db = getFirestore(app);
+export const db = getFirestore(app); //exporting db 
+
 export const auth = getAuth(app); //exporting auth object after allowing "app" to have authentication
