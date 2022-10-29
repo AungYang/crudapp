@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Input } from 'antd';
-
-
-import {
-  createUserWithEmailAndPassword,
+import { collection, addDoc, getDocs } from "firebase/firestore"; 
+import { db } from "../firebase" //imported from firebase.js
+import { auth, createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
-import { auth } from "../firebase";
+  signOut } from "../firebase";
 
 const Auth = () => {
   const [registerEmail, setRegisterEmail] = useState("");
@@ -17,16 +14,37 @@ const Auth = () => {
   const [loginPassword, setLoginPassword] = useState("");
 
 
-
   const [user, setUser] = useState({});
 
-  const onAuthStateChanged = () => {
-    onAuthStateChanged
-    if (user) {
-      // User is signed in.
-    }
-  }; 
+  const docRef = collection(db, "messages");
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        console.log("user: ", user);
+        // ...
+      } else {
+        // User is signed out
+        // ...
+        
+
+      }
+    });
+  })
+
+
+
+  // read from firestore
+  const read = async (e) => {
+    e.preventDefault();
+    const querySnapshot = await getDocs(collection(db, "messages"));
+    querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        return (doc.data().message);
+    });
+}
 
   const register = async () => {
     try {
@@ -56,6 +74,8 @@ const Auth = () => {
   const logout = async () => {
     await signOut(auth);
     console.log("signed out!");
+    console.log(user);
+
   };
 
   return (
@@ -91,6 +111,7 @@ const Auth = () => {
       </Form.Item>
 
       <Form.Item
+
         label="Password"
         name="password"
         rules={[
@@ -175,6 +196,10 @@ const Auth = () => {
     </Form> 
 
     <Button type="primary" htmlType="submit" onClick={logout}>LOGOUT</Button>
+
+    <form onSubmit={read}>
+        <button type="submit">read!</button>
+    </form>
 
 
 

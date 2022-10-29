@@ -1,6 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "@firebase/firestore"
-import { getAuth } from "firebase/auth";  //import firebase auth lib
+import { getAuth, createUserWithEmailAndPassword, updateProfile,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut, } from "firebase/auth";  //import firebase auth lib
 
 
 const firebaseConfig = {
@@ -18,3 +21,11 @@ const app = initializeApp(firebaseConfig); //initialize the connection between f
 export const db = getFirestore(app); //exporting db 
 
 export const auth = getAuth(app); //exporting auth object after allowing "app" to have authentication
+
+export {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+}

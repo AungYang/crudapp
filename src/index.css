@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.pi-header {
+  margin-bottom: 20px;
+}
+
+.pi-header span.h1 {
+  vertical-align: middle; 
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffff88
+}
