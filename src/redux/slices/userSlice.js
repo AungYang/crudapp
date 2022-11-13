@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getAuth } from 'firebase/auth';
 import {
   auth,
   createUserWithEmailAndPassword,
@@ -9,48 +10,76 @@ import {
 
 const initialState = { user: null, loading: false };
 
-export const signin = createAsyncThunk('users/signin', async (data) => {
-  // console.log(
-  //   'userSlice async email password thunkAPI',
-  //   email,
-  //   password,
-  //   thunkAPI
-  // );el
+export const signin = createAsyncThunk('users/signin', async (data, thunkAPI) => {
   const { loginEmail, loginPassword } = data;
-  console.log(
-    'userslice email password',
-    loginEmail,
-    'loginPassword',
-    loginPassword
-  );
+  const { dispatch } = thunkAPI
   try {
     const authUser = await signInWithEmailAndPassword(
       auth,
       loginEmail,
       loginPassword
     );
-    console.log('Signed In Successful!');
-    const {
-      user: { email, uid },
-    } = authUser;
-    console.log('authUser.user email, uid', email, uid);
-    return { email, uid };
+    const { user: { email, uid } } = authUser;
+    console.log(`Signed in successfully! ${email} ${uid}`)
+    // dispatch(setSignedIn({email, uid}));
   } catch (e) {
     console.error('Failed to login', e);
     return null;
   }
 });
 
+
+export const signup = createAsyncThunk('users/signup', async (data) => {
+  const { registerEmail, registerPassword } = data;
+  try {
+    const authUser = await createUserWithEmailAndPassword(
+      auth,
+      registerEmail,
+      registerPassword
+    );
+    console.log('Signed up Successful!');
+    const { user: { email, uid }, } = authUser;
+    return { email, uid }; //payload
+  } catch (e) {
+    console.error('Failed to signup', e);
+    return null;
+  }
+});
+
+
+export const signout = createAsyncThunk("users/signout", async (data) => {
+  await signOut(auth);
+
+  return
+  console.log("signed out from userSlice.js")
+})
+
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  extraReducers: {
-    [signin.fulfilled]: (state, action) => {
-      console.log('signin.fulfilled', state, action);
-      state.loading = false;
-      state.user = action.payload;
+  reducers: {
+    setSignedIn: (state, action) => {
+      console.log("setSignedIn", action.payload)
+      state.user = action.payload
+      state.loading = false
     },
+
+  },
+  extraReducers: {
+    [signout.fulfilled]: (state) => {
+      state.user = null;
+      state.loading = false;
+    },
+
+    // [signup.fulfilled]: (state, action) => {
+    //   console.log('signup.fulfilled', state, action);
+    //   state.loading = false;
+    //   state.user = action.payload;
+    // },
   },
 });
 
+
+export const { setSignedIn } = userSlice.actions
 export const userReducer = userSlice.reducer;
