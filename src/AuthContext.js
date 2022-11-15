@@ -1,31 +1,23 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { auth } from './firebase'
+import { signin } from './redux/slices/userSlice';
 
 const AuthContext = React.createContext();
 
-
-export function useAuth(){
-    return useContext(AuthContext)
-}
+// we will maintain a user state variable and provide it to entire component using React Context
 
 
 export function AuthProvider({children}){
     
     const [user, setUser] = useState();
 
-    function signup(email, password){
-        return auth.createUserWithEmailAndPassword(email, password)
+    const login = (data) =>{
+        signin(data)
     }
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            setUser(user);
-        })
-
-        return unsubscribe;
-    }, []) 
-
-  
+    const logout = () =>{
+        
+    }
 
     const value = {
         user,
@@ -37,4 +29,9 @@ export function AuthProvider({children}){
            {children} 
         </AuthContext.Provider>
     )
+}
+
+
+export function useAuth(){
+    return useContext(AuthContext)
 }

@@ -93,6 +93,9 @@ const Auth = () => {
   return (
     <div>
       USER: {user && `email: ${user.email} uid:${user.uid}`}
+
+      
+
       <Form
         labelCol={{
           span: 8,

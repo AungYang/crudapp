@@ -13,6 +13,11 @@ import {
   NotificationOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { RequireAuth } from './components/auth/RequireAuth';
+
+
+
 const { Header, Content, Footer, Sider } = Layout;
 
 /**
@@ -30,7 +35,7 @@ const App = (props) => {
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         const { email, uid } = authUser
-        dispatch(setSignedIn({email, uid}))
+        dispatch(setSignedIn({ email, uid }))
       } else {
         dispatch(signout());
       }
@@ -40,20 +45,28 @@ const App = (props) => {
 
   return (
     <div>
-      <Layout>
-        <Header className="pi-heaedr">
-          <span className="h1">Postit</span>
-          <div className="float-end">
-            <Button type="secondary">Logout</Button>
-            <Button type="secondary">Register</Button>
-            <Button type="secondary">SignIn</Button>
-          </div>
-        </Header>
-        <Auth />
-      </Layout>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/ass" element={<RequireAuth><h1>ass</h1> </RequireAuth>}/>
+          <Route path='/' element={
+            <Layout>
+              <Header className="pi-heaedr">
+                <span className="h1">Postit</span>
+                <div className="float-end">
+                  <Button type="secondary">Logout</Button>
+                  <Button type="secondary">Register</Button>
+                  <Button type="secondary">SignIn</Button>
+                </div>
+              </Header>
+              <Auth />
+            </Layout>
+          } />
+
+        </Routes>
+      </BrowserRouter>
 
 
-      
+
     </div>
   );
 };
