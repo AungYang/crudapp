@@ -1,11 +1,13 @@
 import React, { useRef } from "react";
 import { db } from "../firebase" //imported from firebase.js
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
+import { message } from "antd/lib";
 
 
 const Home = () => {
     
     const messageRef = useRef();
+    const numberRef = useRef();
     const docRef = collection(db, "messages");
 
     // write function
@@ -13,7 +15,9 @@ const Home = () => {
         e.preventDefault();
 
         let data = {
-            message: messageRef.current.value
+            message: messageRef.current.value,
+            number: Number(numberRef.current.value)
+
         }
 
         try{
@@ -28,8 +32,8 @@ const Home = () => {
         e.preventDefault();
         const querySnapshot = await getDocs(collection(db, "messages"));
         querySnapshot.forEach((doc) => {
-            console.log(doc.data().message);
-            return (doc.data().message);
+            console.log(doc.data().message, Number(doc.data().number));
+            return (doc.data().message, Number(doc.data().number));
         });
     }
 
@@ -41,6 +45,7 @@ const Home = () => {
             <form onSubmit={Write}>
                 <label>Type Here: </label>
                 <input type="text" ref={messageRef}/>
+                <input type="number" ref={numberRef}/>
                 <button type="submit">ENTER!</button>
             </form>
 
